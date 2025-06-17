@@ -1,0 +1,136 @@
+/* Updated module item styling */
+.module-item {
+    padding: 16px 20px;
+    font-size: 15px;
+    border-radius: 12px;
+    margin: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(218, 44, 39, 0.1);
+    cursor: pointer;
+    min-height: 70px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.module-item:hover:not(.disabled) {
+    transform: translateY(-2px) scale(1.01);
+    background: rgba(218, 44, 39, 0.03);
+    border-color: rgba(218, 44, 39, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.module-item .material-icons {
+    font-size: 24px;
+    color: #da2b26;
+    padding: 10px;
+    background: rgba(218, 44, 39, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.module-item:hover:not(.disabled) .material-icons {
+    background: rgba(218, 44, 39, 0.2);
+    transform: scale(1.1);
+}
+
+.module-item h6 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.module-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(200, 200, 200, 0.1);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.module-item.selected {
+    background: linear-gradient(45deg, #da2b26, #e88122);
+    border-color: transparent;
+    transform: scale(0.98);
+}
+
+.module-item.selected h6,
+.module-item.selected .material-icons {
+    color: white;
+}
+
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.module-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.module-grid::-webkit-scrollbar-track {
+    background: rgba(218, 44, 39, 0.05);
+    border-radius: 4px;
+}
+
+.module-grid::-webkit-scrollbar-thumb {
+    background: rgba(218, 44, 39, 0.2);
+    border-radius: 4px;
+}
+
+.module-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(218, 44, 39, 0.3);
+}
+
+@media (max-width: 768px) {
+    .module-item {
+        padding: 12px 15px;
+        font-size: 14px;
+        min-height: 60px;
+        gap: 10px;
+    }
+
+    .module-item .material-icons {
+        font-size: 20px;
+        padding: 8px;
+    }
+
+    .module-item h6 {
+        font-size: 14px;
+    }
+
+    .module-grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+}
+
+/* Progress bar spinner modifications */
+.progress-bar.spinner {
+    width: 40px !important;
+    height: 40px !important;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+.progress-bar-container.circular {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,249 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opinion Analysis</title>
+    <link rel="icon" type="image/png" href="{% static 'testapp/images/logo.png' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'testapp/css/style.css' %}?v={{ VERSION }}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'testapp/css/module-buttons.css' %}?v={{ VERSION }}">
+    <!-- Custom JavaScript -->
+    <script src="{% static 'testapp/js/main.js' %}?v={{ VERSION }}"></script>
+</head>
+
+<body>
+    <!-- Mobile Toggle Button -->
+    <button id="navToggle" class="nav-toggle" role="button" aria-label="Toggle navigation">
+        <span class="material-icons" style="font-size: 1.5rem;">menu</span>
+    </button>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav">
+        <div class="nav-header">Navigation</div>
+        <ul class="nav-links">
+            <li><a href="#audio-section" class="nav-link" data-section="audio-section">
+                    <span class="material-icons"
+                        style="vertical-align: middle; margin-right: 8px; font-size: 1.2rem;">music_note</span>
+                    Audio Tone
+                </a></li>
+            <li><a href="#deepfake-section" class="nav-link" data-section="deepfake-section">
+                    <span class="material-icons"
+                        style="vertical-align: middle; margin-right: 8px; font-size: 1.2rem;">verified</span>
+                    Deepfake Detection
+                </a></li>
+            <li><a href="#eye-section" class="nav-link" data-section="eye-section">
+                    <span class="material-icons"
+                        style="vertical-align: middle; margin-right: 8px; font-size: 1.2rem;">visibility</span>
+                    Eye Tracking
+                </a></li>
+            <li><a href="#video-v3-section" class="nav-link" data-section="video-v3-section">
+                    <span class="material-icons"
+                        style="vertical-align: middle; margin-right: 8px; font-size: 1.2rem;">face</span>
+                    Face Analysis
+                </a></li>
+            <li><a href="#hr-section" class="nav-link" data-section="hr-section">
+                    <span class="material-icons"
+                        style="vertical-align: middle; margin-right: 8px; font-size: 1.2rem;">favorite</span>
+                    Heart Rate
+                </a></li>
+
+            <li><a href="#hrv-section" class="nav-link" data-section="hrv-section">
+                    <span class="material-icons"
+                        style="vertical-align: middle; margin-right: 8px; font-size: 1.2rem;">favorite</span>
+                    SPO2 and Heart Rate Variability
+                </a></li>
+
+            <li><a href="#video-v1-section" class="nav-link" data-section="video-v1-section">
+                    <span class="material-icons"
+                        style="vertical-align: middle; margin-right: 8px; font-size: 1.2rem;">emoji_people</span>
+                    Posture Analysis
+                </a></li>
+            <li><a href="#speech-section" class="nav-link" data-section="speech-section">
+                    <span class="material-icons"
+                        style="vertical-align: middle; margin-right: 8px; font-size: 1.2rem;">record_voice_over</span>
+                    Speech Analysis
+                </a></li>
+        </ul>
+    </nav>
+
+    <div class="upload-counter">
+        <span id="uploadCount">{{ video_count }}</span>
+        Analyzed
+    </div>
+
+    <div class="container py-4">
+        <div class="logo-section">
+            <img src="{% static 'testapp/images/logo.png' %}" alt="Logo" onerror="this.style.display='none'">
+        </div>
+
+        <div class="upload-section">
+            <form id="uploadForm" method="post" enctype="multipart/form-data" onsubmit="startProcessing(event)"
+                class="d-flex flex-column gap-3">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="file" class="form-control" name="video-file" accept="video/*" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="material-icons" style="vertical-align: middle; margin-right: 4px;">analytics</span>
+                        Start
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                        data-bs-target="#moduleSelectModal">
+                        <span class="material-icons" style="vertical-align: middle; margin-right: 4px;">tune</span>
+                        Select
+                    </button>
+                </div>
+            </form>
+            <div class="progress-container mt-4">
+                <div class="progress" style="display: none;" id="progressBar">
+                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    <div class="progress-text">0%</div>
+                </div>
+                <p id="status" class="text-center mt-2"></p>
+            </div>
+        </div>
+
+
+        <div class="analysis-grid">
+            <div id="deepfake-section" style="display: none;">
+                <h2 class="section-heading">Deepfake Detection</h2>
+                <div id="deepfake-result"></div>
+            </div>
+
+            <div id="video-v2-section" style="display: none;">
+                <h2 class="section-heading">Face Expression</h2>
+                <div id="video-v2-result"></div>
+            </div>
+
+            <div id="eye-section" style="display: none;">
+                <h2 class="section-heading">Eye Tracking</h2>
+                <div id="eye-result"></div>
+            </div>
+
+            <div id="video-v1-section" style="display: none;">
+                <h2 class="section-heading">Posture Analysis</h2>
+                <div id="video-v1-result"></div>
+            </div>
+
+
+            <div id="hr-section" style="display:none;">
+                <h2 class="section-heading">Heart Rate Analysis</h2>
+                <div id="HR-result"></div>
+            </div>
+
+            <div id="hrv-section" style="display:none;">
+                <h2 class="section-heading">SP02 and Heart Rate Variability</h2>
+                <div id="hrv-result"></div>
+            </div>
+
+            <div id="speech-section" style="display: none;">
+                <h2 class="section-heading">Speech Analysis</h2>
+                <div id="speech-result"></div>
+            </div>
+
+            <div id="audio-section" style="display: none;">
+                <h2 class="section-heading">Audio Tone Analysis</h2>
+                <div id="audio-tone-result"></div>
+            </div>
+
+            <div id="merged-section" style="display: none;">
+                <h2 class="section-heading">merged video</h2>
+                <div id="merged-result"></div>
+            </div>
+            
+
+        </div>
+    </div>
+
+    <!-- Modernized Module Selection Modal -->
+    <div class="modal fade" id="moduleSelectModal" tabindex="-1" aria-labelledby="moduleSelectModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="moduleSelectModalLabel">Select Analysis Module</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="module-list">
+                        <div class="module-item" data-value="deepfake">
+                            <span class="material-icons">verified</span>
+                            <div class="module-info">
+                                <h6>Deepfake Detection</h6>
+                                <!-- <p>Analyze video for potential deepfake manipulation</p> -->
+                            </div>
+                        </div>
+                        <div class="module-item" data-value="video-v2">
+                            <span class="material-icons">face</span>
+                            <div class="module-info">
+                                <h6>Face Expression</h6>
+
+                            </div>
+                        </div>
+                        <div class="module-item" data-value="eye">
+                            <span class="material-icons">visibility</span>
+                            <div class="module-info">
+                                <h6>Eye Tracking</h6>
+                            </div>
+                        </div>
+                        <div class="module-item" data-value="video-v1">
+                            <span class="material-icons">emoji_people</span>
+                            <div class="module-info">
+                                <h6>Posture Analysis</h6>
+
+                            </div>
+                        </div>
+                        <div class="module-item" data-value="hr">
+                            <span class="material-icons">favorite</span>
+                            <div class="module-info">
+                                <h6>Heart Rate</h6>
+
+                            </div>
+                        </div>
+                        <div class="module-item" data-value="hrv">
+                            <span class="material-icons">favorite</span>
+                            <div class="module-info">
+                                <h6>SPO2 and Heart Rate Variability</h6>
+
+                            </div>
+                        </div>
+                        <div class="module-item" data-value="speech">
+                            <span class="material-icons">record_voice_over</span>
+                            <div class="module-info">
+                                <h6>Speech Analysis</h6>
+
+                            </div>
+                        </div>
+                        <div class="module-item" data-value="audio_V2">
+                            <span class="material-icons">music_note</span>
+                            <div class="module-info">
+                                <h6>Audio Tone(Rudra)</h6>
+                            </div>
+                        </div>
+                        <div class="module-item" data-value="audio_V3">
+                            <span class="material-icons">music_note</span>
+                            <div class="module-info">
+                                <h6>Audio Tone(Souradeep)</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
